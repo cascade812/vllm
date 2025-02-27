@@ -34,6 +34,12 @@ class DeviceCommunicatorBase:
     def all_reduce(self, input_: torch.Tensor) -> torch.Tensor:
         dist.all_reduce(input_, group=self.device_group)
         return input_
+    
+    def reduce_scatter(self, input_: torch.Tensor) -> torch.Tensor:
+        rank = torch.distributed.get_rank(self.device_group)
+        output = torch.empty_like(input_[rank])
+        dist.reduce_scatter_tensor(output, input_, group=self.device_group)
+        return output
 
     def all_gather(self, input_: torch.Tensor, dim: int = -1) -> torch.Tensor:
         if dim < 0:

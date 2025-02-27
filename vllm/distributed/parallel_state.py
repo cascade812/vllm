@@ -311,6 +311,14 @@ class GroupCoordinator:
 
     def _all_reduce_out_place(self, input_: torch.Tensor) -> torch.Tensor:
         return self.device_communicator.all_reduce(input_)
+    
+    def reduce_scatter(self, input_: torch.Tensor) -> torch.Tensor:
+        # Bypass the function if we are using only 1 GPU.
+        if self.world_size == 1:
+            return input_
+
+        return self.device_communicator.reduce_scatter(input_)
+            
 
     def all_gather(self, input_: torch.Tensor, dim: int = -1) -> torch.Tensor:
         world_size = self.world_size
@@ -1036,6 +1044,9 @@ def get_tensor_model_parallel_world_size():
     """Return world size for the tensor model parallel group."""
     return get_tp_group().world_size
 
+def is_sequence_parallel_enabled():
+    """Return true if sequence parallel is enabled."""
+    return get_tp_group().world_size > 1
 
 def get_tensor_model_parallel_rank():
     """Return my rank for the tensor model parallel group."""
