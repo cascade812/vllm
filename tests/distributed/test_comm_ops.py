@@ -211,8 +211,8 @@ def test_multi_process_tensor_parallel(tp_size, test_target):
 @pytest.mark.parametrize("tp_size", [2])
 @pytest.mark.parametrize("test_target", [
     all_reduce_test_worker, 
-    reduce_scatter_test_worker, 
     all_gather_test_worker,
+    reduce_scatter_test_worker,
     broadcast_tensor_dict_test_worker
 ])
 def test_multi_process_tesor_parallel_sequence_parallel(tp_size, test_target):
@@ -238,5 +238,20 @@ def test_multi_process_pipeline_parallel(pp_size, test_target):
     broadcast_tensor_dict_test_worker
 ])
 def test_multi_process_tensor_parallel_pipeline_parallel(
+        tp_size, pp_size, test_target):
+    multi_process_parallel(tp_size, pp_size, test_target)
+
+
+@pytest.mark.skipif(torch.cuda.device_count() < 4,
+                    reason="Need at least 4 GPUs to run the test.")
+@pytest.mark.parametrize("tp_size", [2])
+@pytest.mark.parametrize("pp_size", [2])
+@pytest.mark.parametrize("test_target", [
+    send_recv_test_worker, send_recv_tensor_dict_test_worker,
+    all_reduce_test_worker, all_gather_test_worker,
+    reduce_scatter_test_worker,
+    broadcast_tensor_dict_test_worker
+])
+def test_multi_process_tensor_parallel_sequence_parallel_pipeline_parallel(
         tp_size, pp_size, test_target):
     multi_process_parallel(tp_size, pp_size, test_target)
