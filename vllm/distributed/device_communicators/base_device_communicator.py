@@ -35,15 +35,40 @@ class DeviceCommunicatorBase:
         dist.all_reduce(input_, group=self.device_group)
         return input_
     
-    def reduce_scatter(self, input_: torch.Tensor) -> torch.Tensor:
-        input_size = input_.size()
-        output_size = (input_size[0] // self.world_size, ) + input_size[1:]
+    def reduce_scatter(self, input_: torch.Tensor) -> torch.Tensor:   
+        # Since reduce_scatter_tensor strictly requires input size = output_size * world_size, we need to pad the input tensor before calling the function  
+        input_, pad_amount = self.pad_to_divisible(input_)
+        input_size_after_padding = input_.size()
+        output_size = (input_size_after_padding[0] // self.world_size, ) + input_size_after_padding[1:]
         # Allocate output tensor.
         output_tensor = torch.empty(output_size,
                                     dtype=input_.dtype,
                                     device=input_.device)
         dist.reduce_scatter_tensor(output_tensor, input_, group=self.device_group)
+
+        # After reduce_scatter_tensor, truncate the excess padding across ranks
+        valid_tokens_per_rank = input_.shape[0] // self.world_size  # This assumes equal distribution
+        extra_tokens = input_.shape[0] % self.world_size  # Remainder that was padded
+
+        if self.rank < extra_tokens:
+            valid_tokens_per_rank += 1  # Some ranks get 1 more token
+
+        print(f"{self.rank=}, {valid_tokens_per_rank=}, {output_tensor.size()=}")
+        output_tensor = output_tensor[:valid_tokens_per_rank]  # Truncate correctly
+        print(f"{self.rank=}, after truncate {output_tensor.size()=}")
         return output_tensor
+
+
+    def pad_to_divisible(self, input_: torch.Tensor, pad_value=0):
+        seq_len = input_.shape[0]  # Assuming tensor shape is (seq_len, hidden_size)
+        padded_len = ((seq_len + self.world_size - 1) // self.world_size) * self.world_size  # Next multiple of world_size
+        pad_amount = padded_len - seq_len
+        
+        if pad_amount > 0:
+            pad_tensor = torch.full((pad_amount, input_.shape[1]), pad_value, dtype=input_.dtype, device=input_.device)
+            input_ = torch.cat([input_, pad_tensor], dim=0)  # Concatenate along sequence dimension
+        
+        return input_, pad_amount
 
     def all_gather(self, input_: torch.Tensor, dim: int = -1) -> torch.Tensor:
         if dim < 0:

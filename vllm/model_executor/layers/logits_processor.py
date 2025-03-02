@@ -10,7 +10,8 @@ import torch.nn as nn
 import vllm.envs as envs
 from vllm.config import get_current_vllm_config
 from vllm.distributed import (tensor_model_parallel_all_gather,
-                              tensor_model_parallel_gather)
+                              tensor_model_parallel_gather,
+                              is_sequence_parallel_enabled)
 from vllm.model_executor.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding)
 from vllm.model_executor.sampling_metadata import SamplingMetadata
@@ -64,6 +65,9 @@ class LogitsProcessor(nn.Module):
         sampling_metadata: Optional[SamplingMetadata] = None,
         embedding_bias: Optional[torch.Tensor] = None,
     ) -> Optional[torch.Tensor]:
+        if is_sequence_parallel_enabled():
+            hidden_states = tensor_model_parallel_all_gather(hidden_states, dim=0)
+        print("hidden_states: ", hidden_states.shape)
         if self.logits_as_input:
             logits = hidden_states
         else:
@@ -99,7 +103,11 @@ class LogitsProcessor(nn.Module):
             logits = tensor_model_parallel_all_gather(logits)
         else:
             # None may be returned for rank > 0
+            s1 = logits.size()
+            print(f"zgj _gather_logits before = {s1}")
             logits = tensor_model_parallel_gather(logits)
+            if not logits is None:
+                print(f"zgj _gather_logits after = {logits.size()}")
         return logits
 
     def _get_logits(
@@ -109,10 +117,12 @@ class LogitsProcessor(nn.Module):
         embedding_bias: Optional[torch.Tensor],
     ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
+
         logits = lm_head.quant_method.apply(lm_head,
                                             hidden_states,
                                             bias=embedding_bias)
 
+        print(f"zgj _get_logits hidden_states={hidden_states.size()} --> logits={logits.size()}")
         # Gather logits for TP
         logits = self._gather_logits(logits)
 

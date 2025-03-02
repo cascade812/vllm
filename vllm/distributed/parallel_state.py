@@ -1047,6 +1047,7 @@ def get_tensor_model_parallel_world_size():
 def is_sequence_parallel_enabled():
     """Return true if sequence parallel is enabled."""
     return get_tp_group().world_size > 1
+    return False
 
 def get_tensor_model_parallel_rank():
     """Return my rank for the tensor model parallel group."""

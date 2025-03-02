@@ -141,7 +141,7 @@ _TEXT_GENERATION_EXAMPLE_MODELS = {
     "JAISLMHeadModel": _HfExamplesInfo("inceptionai/jais-13b-chat"),
     "JambaForCausalLM": _HfExamplesInfo("ai21labs/AI21-Jamba-1.5-Mini",
                                         extras={"tiny": "ai21labs/Jamba-tiny-dev"}),  # noqa: E501
-    "LlamaForCausalLM": _HfExamplesInfo("meta-llama/Llama-3.2-1B-Instruct"),
+    "LlamaForCausalLM": _HfExamplesInfo("unsloth/Llama-3.2-1B-Instruct"),
     "LLaMAForCausalLM": _HfExamplesInfo("decapoda-research/llama-7b-hf",
                                         is_available_online=False),
     "MambaForCausalLM": _HfExamplesInfo("state-spaces/mamba-130m-hf"),
@@ -328,12 +328,18 @@ class HfExampleModels:
         return self.hf_models[model_arch]
 
     def find_hf_info(self, model_id: str) -> _HfExamplesInfo:
+        
+        c = 0
         for info in self.hf_models.values():
+            c += 1
+            print(info.default)
             if info.default == model_id:
                 return info
-
+        print(f"zgj count {c}")
         # Fallback to extras
         for info in self.hf_models.values():
+            for extra in info.extras.values():
+                print(extra)
             if any(extra == model_id for extra in info.extras.values()):
                 return info
 

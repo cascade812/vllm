@@ -12,7 +12,7 @@ from vllm.entrypoints.llm import LLM
 from vllm.outputs import RequestOutput
 from vllm.sampling_params import GuidedDecodingParams, SamplingParams
 
-MODEL_NAME = "Qwen/Qwen2.5-1.5B-Instruct"
+MODEL_NAME = "unsloth/Llama-3.2-1B-Instruct"
 GUIDED_DECODING_BACKENDS = ["outlines", "lm-format-enforcer", "xgrammar"]
 
 
@@ -20,7 +20,7 @@ GUIDED_DECODING_BACKENDS = ["outlines", "lm-format-enforcer", "xgrammar"]
 def llm():
     # pytest caches the fixture so we use weakref.proxy to
     # enable garbage collection
-    llm = LLM(model=MODEL_NAME, max_model_len=1024)
+    llm = LLM(model=MODEL_NAME, max_model_len=1024, tensor_parallel_size=2)
 
     with llm.deprecate_legacy_api():
         yield weakref.proxy(llm)

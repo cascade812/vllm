@@ -15,6 +15,8 @@ conda create -n vllm python=3.12 -y
 # Activate the Conda environment
 # This only works in interactive shells, so we source conda.sh first
 source $(conda info --base)/etc/profile.d/conda.sh
+conda init
+source ~/.bashrc
 conda activate vllm
 
 # Install vLLM with precompiled binaries

@@ -388,9 +388,11 @@ class ColumnParallelLinear(LinearBase):
         
         if self.sp_enabled:
             # Sequence parallelism. all gather across the sequence parallel group on first dimension
-            print(f"zgj ColumnParallelLinear sp_enabled, input shape = ", input_.shape)
+            input_shape = input_.shape
             input_ = tensor_model_parallel_all_gather(input_, 0)
-            print(f"zgj ColumnParallelLinear sp_enabled, after all gather input shape = ", input_.shape)
+            print(f"zgj ColumnParallelLinear sp_enabled, gather_output={self.gather_output}, input={input_shape}, after all gather output= ", input_.shape)
+        else:
+            print(f"zgj ColumnParallelLinear sp disabled, gather_output={self.gather_output}, no comm op, shape={input_.shape}")
 
         # Matrix multiply.
         assert self.quant_method is not None
@@ -1163,9 +1165,10 @@ class RowParallelLinear(LinearBase):
         if self.reduce_results and self.tp_size > 1:
             if self.sp_enabled:
                 output = tensor_model_parallel_reduce_scatter(output_parallel)
-                print(f"zgj RowParallelLiner sp enabled, input shape = {output_parallel.shape} output shape = {output_parallel.shape}")
+                print(f"zgj RowParallelLiner sp enabled, input shape = {output_parallel.shape} after reduce scatter output shape = {output.shape}")
             else:
                 output = tensor_model_parallel_all_reduce(output_parallel)
+                print(f"zgj RowParallelLiner sp disabled, input shape = {output_parallel.shape} after all reduce output shape = {output.shape}")
         else:
             output = output_parallel
 

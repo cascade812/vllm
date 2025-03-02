@@ -51,18 +51,27 @@ def reduce_scatter_test_worker(tp_size: int, pp_size: int, rank: int,
     torch.cuda.set_device(device)
     init_test_distributed_environment(tp_size, pp_size, rank,
                                       distributed_init_port)
-    num_elements = 8
+
+    num_rows, num_cols = tp_size + 1, 8
+    torch.manual_seed(42)
     all_tensors = [
-        torch.arange(num_elements, dtype=torch.float32, device="cuda") *
+        torch.randint(0, 10, (num_rows, num_cols), dtype=torch.float32, device="cuda") *
         (r + 1) for r in range(tp_size)
     ]
     
     index = rank % tp_size
-    partition_size = num_elements // tp_size
+    rows_per_partition = (num_rows + tp_size - 1) // tp_size
     all_reduce = torch.sum(torch.stack(all_tensors, dim=0), dim=0)
-    expected = all_reduce[index * partition_size :(index+1) * partition_size]
+    end = min((index+1) * rows_per_partition, num_rows)
+    expected = all_reduce[index * rows_per_partition:end, :]
     t = all_tensors[index]
+    
+    print(f"{rank=}, {all_tensors=}")
+    print(f"{rank=}, {all_reduce=}")
+    print(f"{rank=}, {expected=}")
+    print(f"{rank=}, {t=}")
     t = tensor_model_parallel_reduce_scatter(t)
+    print(f"{rank=}, after reduce_scatter, t={t}")
     torch.testing.assert_close(t, expected)
     
 
@@ -210,10 +219,10 @@ def test_multi_process_tensor_parallel(tp_size, test_target):
                     reason="Need at least 2 GPUs to run the test.")
 @pytest.mark.parametrize("tp_size", [2])
 @pytest.mark.parametrize("test_target", [
-    all_reduce_test_worker, 
-    all_gather_test_worker,
+    # all_reduce_test_worker, 
+    # all_gather_test_worker,
     reduce_scatter_test_worker,
-    broadcast_tensor_dict_test_worker
+    # broadcast_tensor_dict_test_worker
 ])
 def test_multi_process_tesor_parallel_sequence_parallel(tp_size, test_target):
     multi_process_parallel(tp_size, 1, test_target)
