@@ -133,6 +133,7 @@ def rotary_embedding(
     cos_sin_cache: torch.Tensor,
     is_neox: bool,
 ) -> None:
+    print(f"{positions.size()=}, {query.size()=}, {key.size()=}")
     torch.ops._C.rotary_embedding(positions, query, key, head_size,
                                   cos_sin_cache, is_neox)
 

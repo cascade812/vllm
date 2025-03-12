@@ -390,9 +390,9 @@ class ColumnParallelLinear(LinearBase):
             # Sequence parallelism. all gather across the sequence parallel group on first dimension
             input_shape = input_.shape
             input_ = tensor_model_parallel_all_gather(input_, 0)
-            print(f"zgj ColumnParallelLinear sp_enabled, gather_output={self.gather_output}, input={input_shape}, after all gather output= ", input_.shape)
+            print(f"zgj ColumnParallelLinear sp_enabled, rank={get_tensor_model_parallel_rank()}, input={input_shape}, after all gather output= ", input_.shape)
         else:
-            print(f"zgj ColumnParallelLinear sp disabled, gather_output={self.gather_output}, no comm op, shape={input_.shape}")
+            print(f"zgj ColumnParallelLinear sp disabled, rank={get_tensor_model_parallel_rank()}, no comm op, shape={input_.shape}")
 
         # Matrix multiply.
         assert self.quant_method is not None

@@ -316,7 +316,7 @@ class GroupCoordinator:
         # Bypass the function if we are using only 1 GPU.
         if self.world_size == 1:
             return input_
-
+        
         return self.device_communicator.reduce_scatter(input_)
             
 
@@ -1047,7 +1047,6 @@ def get_tensor_model_parallel_world_size():
 def is_sequence_parallel_enabled():
     """Return true if sequence parallel is enabled."""
     return get_tp_group().world_size > 1
-    return False
 
 def get_tensor_model_parallel_rank():
     """Return my rank for the tensor model parallel group."""

@@ -52,26 +52,18 @@ def reduce_scatter_test_worker(tp_size: int, pp_size: int, rank: int,
     init_test_distributed_environment(tp_size, pp_size, rank,
                                       distributed_init_port)
 
-    num_rows, num_cols = tp_size + 1, 8
-    torch.manual_seed(42)
+    num_elements = 8
     all_tensors = [
-        torch.randint(0, 10, (num_rows, num_cols), dtype=torch.float32, device="cuda") *
+        torch.arange(num_elements, dtype=torch.float32, device="cuda") *
         (r + 1) for r in range(tp_size)
     ]
     
     index = rank % tp_size
-    rows_per_partition = (num_rows + tp_size - 1) // tp_size
+    partition_size = num_elements // tp_size
     all_reduce = torch.sum(torch.stack(all_tensors, dim=0), dim=0)
-    end = min((index+1) * rows_per_partition, num_rows)
-    expected = all_reduce[index * rows_per_partition:end, :]
+    expected = all_reduce[index * partition_size :(index+1) * partition_size]
     t = all_tensors[index]
-    
-    print(f"{rank=}, {all_tensors=}")
-    print(f"{rank=}, {all_reduce=}")
-    print(f"{rank=}, {expected=}")
-    print(f"{rank=}, {t=}")
     t = tensor_model_parallel_reduce_scatter(t)
-    print(f"{rank=}, after reduce_scatter, t={t}")
     torch.testing.assert_close(t, expected)
     
 

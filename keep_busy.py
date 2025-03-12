@@ -18,7 +18,7 @@ def keep_gpu_busy():
         torch.cuda.synchronize()
         
         # Print log every 5 minutes
-        print("GPU workload executed. Sleeping for 10 minutes...")
+        print("GPU workload executed. Sleeping for 5 minutes...")
         time.sleep(300)  # Sleep for 5 minutes
 
 if __name__ == "__main__":
