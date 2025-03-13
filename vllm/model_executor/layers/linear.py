@@ -8,9 +8,9 @@ import torch
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter, UninitializedParameter
 
+from vllm.forward_context import get_forward_context
 from vllm.distributed import (divide, get_tensor_model_parallel_rank,
                               get_tensor_model_parallel_world_size,
-                              is_sequence_parallel_enabled,
                               split_tensor_along_last_dim,
                               tensor_model_parallel_all_gather,
                               tensor_model_parallel_all_reduce,
@@ -294,7 +294,6 @@ class ColumnParallelLinear(LinearBase):
                  prefix: str = ""):
         # Divide the weight matrix along the last dimension.
         self.tp_size = get_tensor_model_parallel_world_size()
-        self.sp_enabled = is_sequence_parallel_enabled()
         self.input_size_per_partition = input_size
         self.output_size_per_partition = divide(output_size, self.tp_size)
         self.output_partition_sizes = [self.output_size_per_partition]
@@ -386,11 +385,10 @@ class ColumnParallelLinear(LinearBase):
     def forward(self, input_) -> tuple[torch.Tensor, Optional[Parameter]]:
         bias = self.bias if not self.skip_bias_add else None
         
-        if self.sp_enabled:
-            # Sequence parallelism. all gather across the sequence parallel group on first dimension
+        if get_forward_context().enable_sequence_parallel:
             input_shape = input_.shape
             input_ = tensor_model_parallel_all_gather(input_, 0)
-            print(f"zgj ColumnParallelLinear sp_enabled, rank={get_tensor_model_parallel_rank()}, input={input_shape}, after all gather output= ", input_.shape)
+            print(f"zgj ColumnParallelLinear sp enabled, rank={get_tensor_model_parallel_rank()}, input={input_shape}, after all gather output= ", input_.shape)
         else:
             print(f"zgj ColumnParallelLinear sp disabled, rank={get_tensor_model_parallel_rank()}, no comm op, shape={input_.shape}")
 
@@ -1059,7 +1057,6 @@ class RowParallelLinear(LinearBase):
         # Divide the weight matrix along the first dimension.
         self.tp_rank = get_tensor_model_parallel_rank()
         self.tp_size = get_tensor_model_parallel_world_size()
-        self.sp_enabled  = is_sequence_parallel_enabled()
         self.input_size_per_partition = divide(input_size, self.tp_size)
         self.output_size_per_partition = output_size
         self.output_partition_sizes = [output_size]
@@ -1163,7 +1160,7 @@ class RowParallelLinear(LinearBase):
                                                   bias=bias_)
        
         if self.reduce_results and self.tp_size > 1:
-            if self.sp_enabled:
+            if get_forward_context().enable_sequence_parallel:
                 output = tensor_model_parallel_reduce_scatter(output_parallel)
                 print(f"zgj RowParallelLiner sp enabled, input shape = {output_parallel.shape} after reduce scatter output shape = {output.shape}")
             else:

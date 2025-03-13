@@ -211,10 +211,10 @@ def test_multi_process_tensor_parallel(tp_size, test_target):
                     reason="Need at least 2 GPUs to run the test.")
 @pytest.mark.parametrize("tp_size", [2])
 @pytest.mark.parametrize("test_target", [
-    # all_reduce_test_worker, 
-    # all_gather_test_worker,
+    all_reduce_test_worker, 
+    all_gather_test_worker,
     reduce_scatter_test_worker,
-    # broadcast_tensor_dict_test_worker
+    broadcast_tensor_dict_test_worker
 ])
 def test_multi_process_tesor_parallel_sequence_parallel(tp_size, test_target):
     multi_process_parallel(tp_size, 1, test_target)

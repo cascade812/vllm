@@ -7,11 +7,11 @@ import torch
 import torch.nn.functional as F
 from torch.nn.parameter import Parameter, UninitializedParameter
 
+from vllm.forward_context import get_forward_context
 from vllm.distributed import (divide, get_tensor_model_parallel_rank,
                               get_tensor_model_parallel_world_size,
                               tensor_model_parallel_all_reduce,
                               tensor_model_parallel_reduce_scatter,
-                              is_sequence_parallel_enabled,
                               get_pp_group)
 from vllm.model_executor.layers.quantization.base_config import (
     QuantizationConfig, QuantizeMethodBase, method_has_implemented_embedding)
@@ -213,7 +213,6 @@ class VocabParallelEmbedding(torch.nn.Module):
         # Keep the input dimensions.
         tp_rank = get_tensor_model_parallel_rank()
         self.tp_size = get_tensor_model_parallel_world_size()
-        self.sp_enabled = is_sequence_parallel_enabled()
         self.num_embeddings = num_embeddings
         self.padding_size = padding_size
         self.org_vocab_size = org_num_embeddings or num_embeddings
@@ -425,12 +424,13 @@ class VocabParallelEmbedding(torch.nn.Module):
             output_parallel.masked_fill_(input_mask.unsqueeze(-1), 0)
         # Reduce across all the model parallel GPUs.
         print(f"ismodellast is {self.is_model_last} is_embedding_layer = {self.is_embedding_layer}")
-        if self.sp_enabled and not self.is_model_last:
+        
+        if get_forward_context().enable_sequence_parallel:
             output = tensor_model_parallel_reduce_scatter(output_parallel)
-            print(f"zgj VocabParallelEmbedding sp enabled, {input_.dtype}, do reduce scatter, input shape = {output_parallel.shape} output shape = {output_parallel.shape}")
+            print(f"zgj VocabParallelEmbedding sp enabled, {input_.dtype}, do reduce scatter, input shape = {output_parallel.shape} output shape = {output.shape}")
         else:
             output = tensor_model_parallel_all_reduce(output_parallel)
-            print(f"zgj VocabParallelEmbedding sp disabled or is not first rank, do all reduce, input shape = {output_parallel.shape} output shape = {output_parallel.shape}")
+            print(f"zgj VocabParallelEmbedding sp disabled or is not first rank, do all reduce, input shape = {output_parallel.shape} output shape = {output.shape}")
         return output
 
     def extra_repr(self) -> str:

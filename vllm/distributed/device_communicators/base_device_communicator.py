@@ -37,31 +37,15 @@ class DeviceCommunicatorBase:
     
     def reduce_scatter(self, input_: torch.Tensor) -> torch.Tensor:
         input_size = input_.size()
-        if input_size[0] % self.world_size == 0:
-            output_size = (input_size[0] // self.world_size, ) + input_size[1:]
-            # Allocate output tensor.
-            output_tensor = torch.empty(output_size,
-                                        dtype=input_.dtype,
-                                        device=input_.device)
-            dist.reduce_scatter_tensor(output_tensor, input_, group=self.device_group)
-            return output_tensor
-        else:
-            base_size = input_size[0] // self.world_size
-            remainder = input_size[0] % self.world_size
-            
-            
-            if self.rank < remainder:
-                # First (rank) GPUs with extra element
-                start_idx = self.rank * (base_size + 1)
-            else:
-                # After the first 'remainder' GPUs
-                start_idx = remainder * (base_size + 1) + (self.rank - remainder) * base_size
-            
-            length = base_size + (1 if self.rank < remainder else 0) 
-           
-            print("reduce_scatter do all reduce", self.rank, self.world_size, base_size, remainder, start_idx, length)
-            dist.all_reduce(input_, group=self.device_group)
-            return input_[start_idx : start_idx + length].clone()
+        assert input_size[0] % self.world_size == 0, (
+            f"reduce scatter doesn't work when input size {input_size} is not divisible by world size {self.world_size}")
+        output_size = (input_size[0] // self.world_size, ) + input_size[1:]
+        # Allocate output tensor.
+        output_tensor = torch.empty(output_size,
+                                    dtype=input_.dtype,
+                                    device=input_.device)
+        dist.reduce_scatter_tensor(output_tensor, input_, group=self.device_group)
+        return output_tensor
         
         
 
