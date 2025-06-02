@@ -672,10 +672,15 @@ def cutlass_scaled_mm(a: torch.Tensor,
         triton_scaled_mm = triton_scaled_mm_module.triton_scaled_mm
         return triton_scaled_mm(a, b, scale_a, scale_b, out_dtype, bias)
 
-    out = torch.empty((m, n), dtype=out_dtype, device=a.device)
-
-    torch.ops._C.cutlass_scaled_mm(out, a, b, scale_a, scale_b, bias)
-
+    # out = torch.empty((m, n), dtype=out_dtype, device=a.device)
+    # print(f"cascade cutlass_scaled_mm: a.shape={a.shape}, b.shape={b.shape}, ")
+    # torch.ops._C.cutlass_scaled_mm(out, a, b, scale_a, scale_b, bias)
+    out = torch._scaled_mm(a,
+                           b,
+                           scale_a=scale_a,
+                           scale_b=scale_b,
+                           out_dtype=out_dtype,
+                           bias=bias)
     return out
 
 
