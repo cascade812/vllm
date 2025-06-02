@@ -1,0 +1,636 @@
+INFO 06-02 05:41:14 [__init__.py:243] Automatically detected platform cuda.
+INFO 06-02 05:41:15 [__init__.py:31] Available plugins for group vllm.general_plugins:
+INFO 06-02 05:41:15 [__init__.py:33] - lora_filesystem_resolver -> vllm.plugins.lora_resolvers.filesystem_resolver:register_filesystem_resolver
+INFO 06-02 05:41:15 [__init__.py:36] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-02 05:41:22 [config.py:813] This model supports multiple tasks: {'generate', 'reward', 'score', 'classify', 'embed'}. Defaulting to 'generate'.
+INFO 06-02 05:41:23 [config.py:1900] Defaulting to use mp for distributed inference
+INFO 06-02 05:41:23 [config.py:2143] Chunked prefill is enabled with max_num_batched_tokens=16384.
+WARNING 06-02 05:41:23 [config.py:4381] Batch sizes [1] are removed because they are not multiple of tp_size 2 when sequence parallelism is enabled
+INFO 06-02 05:41:24 [core.py:443] Waiting for init message from front-end.
+WARNING 06-02 05:41:24 [config.py:4381] Batch sizes [1] are removed because they are not multiple of tp_size 2 when sequence parallelism is enabled
+INFO 06-02 05:41:24 [core.py:65] Initializing a V1 LLM engine (v0.9.1.dev58+ga1cc9f33a) with config: model='RedHatAI/Meta-Llama-3.1-8B-Instruct-FP8', speculative_config=None, tokenizer='RedHatAI/Meta-Llama-3.1-8B-Instruct-FP8', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, override_neuron_config={}, tokenizer_revision=None, trust_remote_code=False, dtype=torch.bfloat16, max_seq_len=131072, download_dir=None, load_format=LoadFormat.AUTO, tensor_parallel_size=2, pipeline_parallel_size=1, disable_custom_all_reduce=False, quantization=compressed-tensors, enforce_eager=False, kv_cache_dtype=auto,  device_config=cuda, decoding_config=DecodingConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_backend=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=RedHatAI/Meta-Llama-3.1-8B-Instruct-FP8, num_scheduler_steps=1, multi_step_stream_outputs=True, enable_prefix_caching=True, chunked_prefill_enabled=True, use_async_output_proc=True, pooler_config=None, compilation_config={"level":3,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":["+rms_norm","+rms_norm","+rms_norm"],"splitting_ops":["vllm.unified_attention","vllm.unified_attention_with_output"],"use_inductor":true,"compile_sizes":[4],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"use_cudagraph":true,"cudagraph_num_of_warmups":1,"cudagraph_capture_sizes":[512,504,496,488,480,472,464,456,448,440,432,424,416,408,400,392,384,376,368,360,352,344,336,328,320,312,304,296,288,280,272,264,256,248,240,232,224,216,208,200,192,184,176,168,160,152,144,136,128,120,112,104,96,88,80,72,64,56,48,40,32,24,16,8,4,2],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"max_capture_size":512,"local_cache_dir":null}
+WARNING 06-02 05:41:24 [multiproc_worker_utils.py:306] Reducing Torch parallelism from 104 threads to 1 to avoid unnecessary CPU contention. Set OMP_NUM_THREADS in the external environment to tune this value as needed.
+INFO 06-02 05:41:24 [shm_broadcast.py:250] vLLM message queue communication handle: Handle(local_reader_ranks=[0, 1], buffer_handle=(2, 10485760, 10, 'psm_103146c8'), local_subscribe_addr='ipc:///var/tmp/a2ff64f5-7ea6-46e9-8ddf-733ef9ea77ef', remote_subscribe_addr=None, remote_addr_ipv6=False)
+WARNING 06-02 05:41:24 [utils.py:2663] Methods determine_num_available_blocks,device_config,get_cache_block_size_bytes,initialize_cache not implemented in <vllm.v1.worker.gpu_worker.Worker object at 0x76f9f07be900>
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:24 [shm_broadcast.py:250] vLLM message queue communication handle: Handle(local_reader_ranks=[0], buffer_handle=(1, 10485760, 10, 'psm_d5368c49'), local_subscribe_addr='ipc:///var/tmp/b14354a7-6288-4694-a7bc-2a1fd754e360', remote_subscribe_addr=None, remote_addr_ipv6=False)
+WARNING 06-02 05:41:24 [utils.py:2663] Methods determine_num_available_blocks,device_config,get_cache_block_size_bytes,initialize_cache not implemented in <vllm.v1.worker.gpu_worker.Worker object at 0x76f9f0ee0890>
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:24 [shm_broadcast.py:250] vLLM message queue communication handle: Handle(local_reader_ranks=[0], buffer_handle=(1, 10485760, 10, 'psm_db5abd1c'), local_subscribe_addr='ipc:///var/tmp/da5c12a6-ce3c-401a-9919-5b152624809a', remote_subscribe_addr=None, remote_addr_ipv6=False)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:31 [utils.py:1077] Found nccl from library libnccl.so.2
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:31 [pynccl.py:69] vLLM is using nccl==2.26.2
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:31 [utils.py:1077] Found nccl from library libnccl.so.2
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:31 [pynccl.py:69] vLLM is using nccl==2.26.2
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:32 [custom_all_reduce_utils.py:245] reading GPU P2P access cache from /home//.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:32 [custom_all_reduce_utils.py:245] reading GPU P2P access cache from /home//.cache/vllm/gpu_p2p_access_cache_for_0,1,2,3,4,5,6,7.json
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:32 [shm_broadcast.py:250] vLLM message queue communication handle: Handle(local_reader_ranks=[1], buffer_handle=(1, 4194304, 6, 'psm_72b1ee69'), local_subscribe_addr='ipc:///var/tmp/b9919065-7d23-498e-b8ed-2cb6f9f22de9', remote_subscribe_addr=None, remote_addr_ipv6=False)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:32 [parallel_state.py:1064] rank 0 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:32 [parallel_state.py:1064] rank 1 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 1, EP rank 1
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m WARNING 06-02 05:41:32 [topk_topp_sampler.py:58] FlashInfer is not available. Falling back to the PyTorch-native implementation of top-p & top-k sampling. For the best performance, please install FlashInfer.
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m WARNING 06-02 05:41:32 [topk_topp_sampler.py:58] FlashInfer is not available. Falling back to the PyTorch-native implementation of top-p & top-k sampling. For the best performance, please install FlashInfer.
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:32 [gpu_model_runner.py:1543] Starting to load model RedHatAI/Meta-Llama-3.1-8B-Instruct-FP8...
+[1;36m(VllmWorker råank=1 pid=621210)[0;0m INFO 06-02 05:41:32 [gpu_model_runner.py:1543] Starting to load model RedHatAI/Meta-Llama-3.1-8B-Instruct-FP8...
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:33 [cuda.py:209] Using Flash Attention backend on V1 engine.
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:33 [cuda.py:209] Using Flash Attention backend on V1 engine.
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:33 [backends.py:37] Using InductorAdaptor
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:33 [backends.py:37] Using InductorAdaptor
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:33 [weight_utils.py:291] Using model weights format ['*.safetensors']
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:33 [weight_utils.py:291] Using model weights format ['*.safetensors']
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m 
+Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m 
+Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:00<00:00,  1.77it/s]
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:34 [default_loader.py:280] Loading weights took 1.00 seconds
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:34 [gpu_model_runner.py:1561] Model loading took 4.2624 GiB and 1.393527 seconds
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m 
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:01<00:00,  1.64it/s]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m 
+Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:01<00:00,  1.65it/s]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m 
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:34 [default_loader.py:280] Loading weights took 1.25 seconds
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:34 [gpu_model_runner.py:1561] Model loading took 4.2624 GiB and 1.690340 seconds
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:41 [backends.py:461] Using cache directory: /home//.cache/vllm/torch_compile_cache/b1c5199cb7/rank_0_0 for vLLM's torch.compile
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:41 [backends.py:471] Dynamo bytecode transform time: 6.50 s
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:41 [backends.py:461] Using cache directory: /home//.cache/vllm/torch_compile_cache/b1c5199cb7/rank_1_0 for vLLM's torch.compile
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:41 [backends.py:471] Dynamo bytecode transform time: 6.53 s
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m origin sp graph graph():
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg0_1 : [num_users=5] = placeholder[target=arg0_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg1_1 : [num_users=15] = placeholder[target=arg1_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg2_1 : [num_users=1] = placeholder[target=arg2_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg3_1 : [num_users=1] = placeholder[target=arg3_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg4_1 : [num_users=2] = placeholder[target=arg4_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg5_1 : [num_users=1] = placeholder[target=arg5_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg6_1 : [num_users=1] = placeholder[target=arg6_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg7_1 : [num_users=1] = placeholder[target=arg7_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg8_1 : [num_users=1] = placeholder[target=arg8_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.bfloat16, layout: torch.strided, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %permute : [num_users=1] = call_function[target=torch.ops.aten.permute.default](args = (%empty, [0, 1]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %ge : [num_users=1] = call_function[target=torch.ops.aten.ge.Scalar](args = (%arg0_1, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %lt : [num_users=1] = call_function[target=torch.ops.aten.lt.Scalar](args = (%arg0_1, 64128), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_and : [num_users=2] = call_function[target=torch.ops.aten.bitwise_and.Tensor](args = (%ge, %lt), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %ge_1 : [num_users=1] = call_function[target=torch.ops.aten.ge.Scalar](args = (%arg0_1, 128256), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %lt_1 : [num_users=1] = call_function[target=torch.ops.aten.lt.Scalar](args = (%arg0_1, 128256), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_and_1 : [num_users=2] = call_function[target=torch.ops.aten.bitwise_and.Tensor](args = (%ge_1, %lt_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_or : [num_users=2] = call_function[target=torch.ops.aten.bitwise_or.Tensor](args = (%bitwise_and, %bitwise_and_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_not : [num_users=1] = call_function[target=torch.ops.aten.bitwise_not.default](args = (%bitwise_or,), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze : [num_users=1] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%bitwise_not, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %full_default : [num_users=1] = call_function[target=torch.ops.aten.full.default](args = ([], 0.0), kwargs = {dtype: torch.bfloat16, layout: torch.strided, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%bitwise_and, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_2 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%bitwise_and_1, 64128), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_16 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul, %mul_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_10 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%arg0_1, %add_16), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_6 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%bitwise_or, %sub_10), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %embedding : [num_users=1] = call_function[target=torch.ops.aten.embedding.default](args = (%arg2_1, %mul_6), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %where : [num_users=1] = call_function[target=torch.ops.aten.where.self](args = (%unsqueeze, %full_default, %embedding), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce : [num_users=2] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%where, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.rms_norm.default,), kwargs = {result: %permute, input: %all_reduce, weight: %arg3_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_1 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_1 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_1 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_1, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_1 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_1, input: %view_1, scale: %arg4_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_3 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_1, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_2 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 3072],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_2 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_2, a: %getitem_3, b: %arg5_1, a_scales: %arg4_1, b_scales: %arg6_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_5 : [num_users=5] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %index : [num_users=1] = call_function[target=torch.ops.aten.index.Tensor](args = (%arg8_1, [%arg7_1]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split : [num_users=2] = call_function[target=torch.ops.aten.split.Tensor](args = (%index, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_9 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_10 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_4 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_1 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_4, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_13 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_1, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_5 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_13, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_2 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_5, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_16 : [num_users=2] = call_function[target=operator.getitem](args = (%split_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_6 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:41:44 [backends.py:160] Cache the graph of shape None for later use
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_2 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_6, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_18 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_7 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_18, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_3 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_7, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_22 : [num_users=2] = call_function[target=operator.getitem](args = (%split_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_12 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_4 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_12, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_29 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_13 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_29, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_5 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_13, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_31 : [num_users=2] = call_function[target=operator.getitem](args = (%split_5, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_14 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_5 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_14, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_34 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_15 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_34, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_6 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_15, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_37 : [num_users=2] = call_function[target=operator.getitem](args = (%split_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_23 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_7 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_23, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_43 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_1 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_9, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_52 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_16, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_2 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_10, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_55 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_22, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_40 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_52, %mul_55), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_60 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_22, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_63 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_16, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_124 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_60, %mul_63), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub_40, %add_124], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_10 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat, [%arg1_1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_19 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_10, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_3 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_9, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_90 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_31, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_4 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_10, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_93 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_37, %unsqueeze_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_57 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_90, %mul_93), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_98 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_37, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_101 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_31, %unsqueeze_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_186 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_98, %mul_101), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat_1 : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub_57, %add_186], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_18 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat_1, [%arg1_1, 512]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_21 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_18, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_24 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_43, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_3 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 2048],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_20 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%empty_3, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     return (view_19, view_21, view_24, view_20, all_reduce)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:41:44 [backends.py:160] Cache the graph of shape None for later use
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m origin sp graph graph():
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg0_1 : [num_users=1] = placeholder[target=arg0_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg1_1 : [num_users=24] = placeholder[target=arg1_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg2_1 : [num_users=2] = placeholder[target=arg2_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg3_1 : [num_users=1] = placeholder[target=arg3_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg4_1 : [num_users=1] = placeholder[target=arg4_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg5_1 : [num_users=1] = placeholder[target=arg5_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg6_1 : [num_users=2] = placeholder[target=arg6_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg7_1 : [num_users=2] = placeholder[target=arg7_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg8_1 : [num_users=1] = placeholder[target=arg8_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg9_1 : [num_users=1] = placeholder[target=arg9_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg10_1 : [num_users=2] = placeholder[target=arg10_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg11_1 : [num_users=1] = placeholder[target=arg11_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg12_1 : [num_users=1] = placeholder[target=arg12_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg13_1 : [num_users=1] = placeholder[target=arg13_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg14_1 : [num_users=2] = placeholder[target=arg14_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg15_1 : [num_users=1] = placeholder[target=arg15_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg16_1 : [num_users=1] = placeholder[target=arg16_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg17_1 : [num_users=1] = placeholder[target=arg17_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg18_1 : [num_users=1] = placeholder[target=arg18_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 2048],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%arg0_1, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_1 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty, input: %view_1, scale: %arg2_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_1 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_1 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_1 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_1, a: %getitem_1, b: %arg3_1, a_scales: %arg2_1, b_scales: %arg4_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_3 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_1, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_3 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_3, [%arg1_1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%view_3, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_2 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce, residual: %arg6_1, weight: %arg5_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_5 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_6 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_2 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_5 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_3 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_2, input: %view_5, scale: %arg7_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_8 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_3 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 14336],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_4 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_3, a: %getitem_8, b: %arg8_1, a_scales: %arg7_1, b_scales: %arg9_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_10 : [num_users=2] = call_function[target=operator.getitem](args = (%auto_functionalized_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_4 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 7168],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_7 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_10, [%arg1_1, 14336]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_2 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%view_7, 1, 0, 7168), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type : [num_users=2] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%slice_2, torch.float32), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sigmoid : [num_users=1] = call_function[target=torch.ops.aten.sigmoid.default](args = (%convert_element_type,), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_20 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type, %sigmoid), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type_1 : [num_users=1] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%mul_20, torch.bfloat16), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_8 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_10, [%arg1_1, 14336]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_4 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%view_8, 1, 7168, 9223372036854775807), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_25 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type_1, %slice_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_9 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%mul_25, [-1, 7168]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_5 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_4, input: %view_9, scale: %arg10_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_12 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_5 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_6 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_5, a: %getitem_12, b: %arg11_1, a_scales: %arg10_1, b_scales: %arg12_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_14 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_11 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_14, [%arg1_1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce_1 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%view_11, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_7 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_1, residual: %getitem_6, weight: %arg13_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_16 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_17 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_6 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_13 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_16, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_8 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_6, input: %view_13, scale: %arg14_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_19 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_8, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_7 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 3072],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_9 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_7, a: %getitem_19, b: %arg15_1, a_scales: %arg14_1, b_scales: %arg16_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_21 : [num_users=5] = call_function[target=operator.getitem](args = (%auto_functionalized_9, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %index : [num_users=1] = call_function[target=torch.ops.aten.index.Tensor](args = (%arg18_1, [%arg17_1]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split : [num_users=2] = call_function[target=torch.ops.aten.split.Tensor](args = (%index, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_25 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_26 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_16 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_21, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_1 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_16, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_29 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_1, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_17 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_29, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_2 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_17, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_32 : [num_users=2] = call_function[target=operator.getitem](args = (%split_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_18 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_21, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_2 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_18, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_34 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_19 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_34, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_3 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_19, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_38 : [num_users=2] = call_function[target=operator.getitem](args = (%split_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_24 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_21, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_4 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_24, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_45 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_25 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_45, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_5 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_25, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_47 : [num_users=2] = call_function[target=operator.getitem](args = (%split_5, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_26 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_21, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_5 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_26, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_50 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_27 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_50, [%arg1_1, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_6 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_27, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_53 : [num_users=2] = call_function[target=operator.getitem](args = (%split_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_25, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_69 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_32, %unsqueeze), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_1 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_26, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_72 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_38, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_38 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_69, %mul_72), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_77 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_38, %unsqueeze), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_80 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_32, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_133 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_77, %mul_80), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub_38, %add_133], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_22 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat, [%arg1_1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_31 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_22, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_8 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 2048],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_32 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%empty_8, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_2 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_25, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_107 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_47, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_3 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_26, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_110 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_53, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_55 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_107, %mul_110), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_115 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_53, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_118 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_47, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_195 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_115, %mul_118), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat_1 : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub_55, %add_195], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_30 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat_1, [%arg1_1, 512]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_33 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_30, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %copy_ : [num_users=0] = call_function[target=torch.ops.aten.copy_.default](args = (%arg6_1, %getitem_17), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_35 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_21, [%arg1_1, 3072]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_7 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%view_35, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_59 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_36 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_59, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     return (view_31, view_33, view_36, view_32)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m origin sp graph graph():
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg0_1 : [num_users=1] = placeholder[target=arg0_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg1_1 : [num_users=10] = placeholder[target=arg1_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg2_1 : [num_users=2] = placeholder[target=arg2_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg3_1 : [num_users=1] = placeholder[target=arg3_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg4_1 : [num_users=1] = placeholder[target=arg4_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg5_1 : [num_users=1] = placeholder[target=arg5_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg6_1 : [num_users=2] = placeholder[target=arg6_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg7_1 : [num_users=2] = placeholder[target=arg7_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg8_1 : [num_users=1] = placeholder[target=arg8_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg9_1 : [num_users=1] = placeholder[target=arg9_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg10_1 : [num_users=2] = placeholder[target=arg10_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg11_1 : [num_users=1] = placeholder[target=arg11_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg12_1 : [num_users=1] = placeholder[target=arg12_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg13_1 : [num_users=1] = placeholder[target=arg13_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 2048],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%arg0_1, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_1 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty, input: %view_1, scale: %arg2_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_1 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_1 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_1 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_1, a: %getitem_1, b: %arg3_1, a_scales: %arg2_1, b_scales: %arg4_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_3 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_1, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_3 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_3, [%arg1_1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%view_3, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_2 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce, residual: %arg6_1, weight: %arg5_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_5 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_6 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_2 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_5 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_3 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_2, input: %view_5, scale: %arg7_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_8 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_3 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 14336],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_4 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_3, a: %getitem_8, b: %arg8_1, a_scales: %arg7_1, b_scales: %arg9_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_10 : [num_users=2] = call_function[target=operator.getitem](args = (%auto_functionalized_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_4 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 7168],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_7 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_10, [%arg1_1, 14336]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_2 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%view_7, 1, 0, 7168), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type : [num_users=2] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%slice_2, torch.float32), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sigmoid : [num_users=1] = call_function[target=torch.ops.aten.sigmoid.default](args = (%convert_element_type,), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_20 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type, %sigmoid), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type_1 : [num_users=1] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%mul_20, torch.bfloat16), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_8 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_10, [%arg1_1, 14336]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_4 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%view_8, 1, 7168, 9223372036854775807), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_25 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type_1, %slice_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_9 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%mul_25, [-1, 7168]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_5 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_4, input: %view_9, scale: %arg10_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_12 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_5 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([%arg1_1, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_6 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_5, a: %getitem_12, b: %arg11_1, a_scales: %arg10_1, b_scales: %arg12_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_14 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_11 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_14, [%arg1_1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce_1 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%view_11, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_7 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_1, residual: %getitem_6, weight: %arg13_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_16 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_17 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %copy_ : [num_users=0] = call_function[target=torch.ops.aten.copy_.default](args = (%arg6_1, %getitem_17), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     return (getitem_16,)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:42:03 [backends.py:172] Compiling a graph for general shape takes 21.68 s
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:42:03 [backends.py:172] Compiling a graph for general shape takes 21.98 s
+INFO 06-02 05:42:16 [kv_cache_utils.py:637] GPU KV cache size: 982,000 tokens
+INFO 06-02 05:42:16 [kv_cache_utils.py:640] Maximum concurrency for 131,072 tokens per request: 7.49x
+INFO 06-02 05:42:16 [kv_cache_utils.py:637] GPU KV cache size: 982,000 tokens
+INFO 06-02 05:42:16 [kv_cache_utils.py:640] Maximum concurrency for 131,072 tokens per request: 7.49x
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m origin sp graph graph():
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg0_1 : [num_users=5] = placeholder[target=arg0_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg1_1 : [num_users=0] = placeholder[target=arg1_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg2_1 : [num_users=1] = placeholder[target=arg2_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg3_1 : [num_users=1] = placeholder[target=arg3_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg4_1 : [num_users=2] = placeholder[target=arg4_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg5_1 : [num_users=1] = placeholder[target=arg5_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg6_1 : [num_users=1] = placeholder[target=arg6_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg7_1 : [num_users=1] = placeholder[target=arg7_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg8_1 : [num_users=1] = placeholder[target=arg8_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.bfloat16, layout: torch.strided, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %permute : [num_users=1] = call_function[target=torch.ops.aten.permute.default](args = (%empty, [0, 1]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %ge : [num_users=1] = call_function[target=torch.ops.aten.ge.Scalar](args = (%arg0_1, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %lt : [num_users=1] = call_function[target=torch.ops.aten.lt.Scalar](args = (%arg0_1, 64128), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_and : [num_users=2] = call_function[target=torch.ops.aten.bitwise_and.Tensor](args = (%ge, %lt), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %ge_1 : [num_users=1] = call_function[target=torch.ops.aten.ge.Scalar](args = (%arg0_1, 128256), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %lt_1 : [num_users=1] = call_function[target=torch.ops.aten.lt.Scalar](args = (%arg0_1, 128256), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_and_1 : [num_users=2] = call_function[target=torch.ops.aten.bitwise_and.Tensor](args = (%ge_1, %lt_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_or : [num_users=2] = call_function[target=torch.ops.aten.bitwise_or.Tensor](args = (%bitwise_and, %bitwise_and_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %bitwise_not : [num_users=1] = call_function[target=torch.ops.aten.bitwise_not.default](args = (%bitwise_or,), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze : [num_users=1] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%bitwise_not, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %full_default : [num_users=1] = call_function[target=torch.ops.aten.full.default](args = ([], 0.0), kwargs = {dtype: torch.bfloat16, layout: torch.strided, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%bitwise_and, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_1 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%bitwise_and_1, 64128), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul, %mul_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%arg0_1, %add), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_2 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%bitwise_or, %sub), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %embedding : [num_users=1] = call_function[target=torch.ops.aten.embedding.default](args = (%arg2_1, %mul_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %where : [num_users=1] = call_function[target=torch.ops.aten.where.self](args = (%unsqueeze, %full_default, %embedding), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce : [num_users=2] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%where, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.rms_norm.default,), kwargs = {result: %permute, input: %all_reduce, weight: %arg3_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_1 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_1 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_1 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_1, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_1 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_1, input: %view_1, scale: %arg4_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_3 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_1, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_2 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 3072],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_2 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_2, a: %getitem_3, b: %arg5_1, a_scales: %arg4_1, b_scales: %arg6_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_5 : [num_users=5] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %index : [num_users=1] = call_function[target=torch.ops.aten.index.Tensor](args = (%arg8_1, [%arg7_1]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split : [num_users=2] = call_function[target=torch.ops.aten.split.Tensor](args = (%index, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_9 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_10 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_1 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_5, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_13 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_1, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_5 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_13, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_2 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_5, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_16 : [num_users=2] = call_function[target=operator.getitem](args = (%split_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_2 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_5, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_18 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:42:33 [backends.py:160] Cache the graph of shape 4 for later use
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_7 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_18, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_3 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_7, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_22 : [num_users=2] = call_function[target=operator.getitem](args = (%split_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_4 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_5, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_29 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_13 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_29, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_5 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_13, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_31 : [num_users=2] = call_function[target=operator.getitem](args = (%split_5, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_5 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_5, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_34 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_15 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_34, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_6 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_15, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_37 : [num_users=2] = call_function[target=operator.getitem](args = (%split_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_7 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_5, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_43 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_1 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_9, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_3 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_16, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_2 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_10, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_4 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_22, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_1 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_3, %mul_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_5 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_22, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_6 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_16, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_1 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_5, %mul_6), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub_1, %add_1], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_10 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat, [4, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_19 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_10, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_3 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_9, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_7 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_31, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_4 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_10, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_8 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_37, %unsqueeze_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_2 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_7, %mul_8), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_9 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_37, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_10 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_31, %unsqueeze_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_2 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_9, %mul_10), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat_1 : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub_2, %add_2], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_18 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat_1, [4, 512]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_21 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_18, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_24 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_43, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_3 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 2048],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_20 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%empty_3, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     return (view_19, view_21, view_24, view_20, all_reduce)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:42:33 [backends.py:160] Cache the graph of shape 4 for later use
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m origin sp graph graph():
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg0_1 : [num_users=1] = placeholder[target=arg0_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg1_1 : [num_users=0] = placeholder[target=arg1_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg2_1 : [num_users=2] = placeholder[target=arg2_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg3_1 : [num_users=1] = placeholder[target=arg3_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg4_1 : [num_users=1] = placeholder[target=arg4_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg5_1 : [num_users=1] = placeholder[target=arg5_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg6_1 : [num_users=2] = placeholder[target=arg6_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg7_1 : [num_users=2] = placeholder[target=arg7_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg8_1 : [num_users=1] = placeholder[target=arg8_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg9_1 : [num_users=1] = placeholder[target=arg9_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg10_1 : [num_users=2] = placeholder[target=arg10_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg11_1 : [num_users=1] = placeholder[target=arg11_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg12_1 : [num_users=1] = placeholder[target=arg12_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg13_1 : [num_users=1] = placeholder[target=arg13_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg14_1 : [num_users=2] = placeholder[target=arg14_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg15_1 : [num_users=1] = placeholder[target=arg15_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg16_1 : [num_users=1] = placeholder[target=arg16_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg17_1 : [num_users=1] = placeholder[target=arg17_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg18_1 : [num_users=1] = placeholder[target=arg18_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 2048],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%arg0_1, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_1 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty, input: %view_1, scale: %arg2_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_1 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_1 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_1 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_1, a: %getitem_1, b: %arg3_1, a_scales: %arg2_1, b_scales: %arg4_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_3 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_1, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%getitem_3, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_2 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce, residual: %arg6_1, weight: %arg5_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_5 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_6 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_2 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_5 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_3 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_2, input: %view_5, scale: %arg7_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_8 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_3 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 14336],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_4 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_3, a: %getitem_8, b: %arg8_1, a_scales: %arg7_1, b_scales: %arg9_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_10 : [num_users=2] = call_function[target=operator.getitem](args = (%auto_functionalized_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_4 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 7168],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_2 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%getitem_10, 1, 0, 7168), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type : [num_users=2] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%slice_2, torch.float32), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sigmoid : [num_users=1] = call_function[target=torch.ops.aten.sigmoid.default](args = (%convert_element_type,), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type, %sigmoid), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type_1 : [num_users=1] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%mul, torch.bfloat16), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_4 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%getitem_10, 1, 7168, 9223372036854775807), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_1 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type_1, %slice_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_9 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%mul_1, [-1, 7168]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_5 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_4, input: %view_9, scale: %arg10_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_12 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_5 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_6 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_5, a: %getitem_12, b: %arg11_1, a_scales: %arg10_1, b_scales: %arg12_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_14 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce_1 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%getitem_14, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_7 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_1, residual: %getitem_6, weight: %arg13_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_16 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_17 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_6 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_13 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_16, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_8 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_6, input: %view_13, scale: %arg14_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_19 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_8, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_7 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 3072],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_9 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_7, a: %getitem_19, b: %arg15_1, a_scales: %arg14_1, b_scales: %arg16_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_21 : [num_users=5] = call_function[target=operator.getitem](args = (%auto_functionalized_9, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %index : [num_users=1] = call_function[target=torch.ops.aten.index.Tensor](args = (%arg18_1, [%arg17_1]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split : [num_users=2] = call_function[target=torch.ops.aten.split.Tensor](args = (%index, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_25 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_26 : [num_users=2] = call_function[target=operator.getitem](args = (%split, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_1 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_21, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_29 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_1, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_17 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_29, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_2 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_17, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_32 : [num_users=2] = call_function[target=operator.getitem](args = (%split_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_2 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_21, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_34 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_2, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_19 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_34, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_3 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_19, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_38 : [num_users=2] = call_function[target=operator.getitem](args = (%split_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_4 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_21, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_45 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_25 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_45, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_5 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_25, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_47 : [num_users=2] = call_function[target=operator.getitem](args = (%split_5, 0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_5 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_21, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_50 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_27 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_50, [4, -1, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_6 : [num_users=1] = call_function[target=torch.ops.aten.split.Tensor](args = (%view_27, 64, -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_53 : [num_users=2] = call_function[target=operator.getitem](args = (%split_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_25, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_2 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_32, %unsqueeze), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_1 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_26, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_3 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_38, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_2, %mul_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_4 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_38, %unsqueeze), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_5 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_32, %unsqueeze_1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_4, %mul_5), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub, %add], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_22 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat, [4, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_31 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_22, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_8 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 2048],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_32 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%empty_8, [-1, 16, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_2 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_25, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_6 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_47, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %unsqueeze_3 : [num_users=2] = call_function[target=torch.ops.aten.unsqueeze.default](args = (%getitem_26, -2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_7 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_53, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sub_1 : [num_users=1] = call_function[target=torch.ops.aten.sub.Tensor](args = (%mul_6, %mul_7), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_8 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_53, %unsqueeze_2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_9 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%getitem_47, %unsqueeze_3), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %add_1 : [num_users=1] = call_function[target=torch.ops.aten.add.Tensor](args = (%mul_8, %mul_9), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %cat_1 : [num_users=1] = call_function[target=torch.ops.aten.cat.default](args = ([%sub_1, %add_1], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_30 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%cat_1, [4, 512]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_33 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view_30, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %copy_ : [num_users=0] = call_function[target=torch.ops.aten.copy_.default](args = (%arg6_1, %getitem_17), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %split_with_sizes_7 : [num_users=1] = call_function[target=torch.ops.aten.split_with_sizes.default](args = (%getitem_21, [2048, 512, 512], -1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_59 : [num_users=1] = call_function[target=operator.getitem](args = (%split_with_sizes_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_36 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_59, [-1, 4, 128]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     return (view_31, view_33, view_36, view_32)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m origin sp graph graph():
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg0_1 : [num_users=1] = placeholder[target=arg0_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg1_1 : [num_users=0] = placeholder[target=arg1_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg2_1 : [num_users=2] = placeholder[target=arg2_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg3_1 : [num_users=1] = placeholder[target=arg3_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg4_1 : [num_users=1] = placeholder[target=arg4_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg5_1 : [num_users=1] = placeholder[target=arg5_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg6_1 : [num_users=2] = placeholder[target=arg6_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg7_1 : [num_users=2] = placeholder[target=arg7_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg8_1 : [num_users=1] = placeholder[target=arg8_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg9_1 : [num_users=1] = placeholder[target=arg9_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg10_1 : [num_users=2] = placeholder[target=arg10_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg11_1 : [num_users=1] = placeholder[target=arg11_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg12_1 : [num_users=1] = placeholder[target=arg12_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %arg13_1 : [num_users=1] = placeholder[target=arg13_1]
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 2048],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%arg0_1, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_1 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%view, [-1, 2048]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty, input: %view_1, scale: %arg2_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_1 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_1 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_1 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_1, a: %getitem_1, b: %arg3_1, a_scales: %arg2_1, b_scales: %arg4_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_3 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_1, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%getitem_3, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_2 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce, residual: %arg6_1, weight: %arg5_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_5 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_6 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_2, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_2 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_5 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_5, [-1, 4096]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_3 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_2, input: %view_5, scale: %arg7_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_8 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_3, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_3 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 14336],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_4 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_3, a: %getitem_8, b: %arg8_1, a_scales: %arg7_1, b_scales: %arg9_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_10 : [num_users=2] = call_function[target=operator.getitem](args = (%auto_functionalized_4, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_4 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 7168],), kwargs = {dtype: torch.float8_e4m3fn, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_2 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%getitem_10, 1, 0, 7168), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type : [num_users=2] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%slice_2, torch.float32), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %sigmoid : [num_users=1] = call_function[target=torch.ops.aten.sigmoid.default](args = (%convert_element_type,), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type, %sigmoid), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %convert_element_type_1 : [num_users=1] = call_function[target=torch.ops.prims.convert_element_type.default](args = (%mul, torch.bfloat16), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %slice_4 : [num_users=1] = call_function[target=torch.ops.aten.slice.Tensor](args = (%getitem_10, 1, 7168, 9223372036854775807), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %mul_1 : [num_users=1] = call_function[target=torch.ops.aten.mul.Tensor](args = (%convert_element_type_1, %slice_4), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %view_9 : [num_users=1] = call_function[target=torch.ops.aten.reshape.default](args = (%mul_1, [-1, 7168]), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_5 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.static_scaled_fp8_quant.default,), kwargs = {result: %empty_4, input: %view_9, scale: %arg10_1})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_12 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_5, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %empty_5 : [num_users=1] = call_function[target=torch.ops.aten.empty.memory_format](args = ([4, 4096],), kwargs = {dtype: torch.bfloat16, device: cuda:0, pin_memory: False})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_6 : [num_users=1] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.cutlass_scaled_mm.default,), kwargs = {out: %empty_5, a: %getitem_12, b: %arg11_1, a_scales: %arg10_1, b_scales: %arg12_1, bias: None})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_14 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_6, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %all_reduce_1 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%getitem_14, tp:0), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %auto_functionalized_7 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_1, residual: %getitem_6, weight: %arg13_1, epsilon: 1e-05})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_16 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 1), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %getitem_17 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_7, 2), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     %copy_ : [num_users=0] = call_function[target=torch.ops.aten.copy_.default](args = (%arg6_1, %getitem_17), kwargs = {})
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m     return (getitem_16,)
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:42:43 [backends.py:175] Compiling a graph for shape 4 takes 10.85 s
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:42:43 [monitor.py:33] torch.compile takes 39.02 s in total
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:42:43 [backends.py:175] Compiling a graph for shape 4 takes 11.17 s
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:42:43 [monitor.py:33] torch.compile takes 39.67 s in total
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:42:43 [custom_all_reduce.py:195] Registering 4225 cuda graph addresses
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:42:43 [custom_all_reduce.py:195] Registering 4225 cuda graph addresses
+[1;36m(VllmWorker rank=1 pid=621210)[0;0m INFO 06-02 05:42:44 [gpu_model_runner.py:1948] Graph capturing finished in 28 secs, took 0.62 GiB
+[1;36m(VllmWorker rank=0 pid=621209)[0;0m INFO 06-02 05:42:44 [gpu_model_runner.py:1948] Graph capturing finished in 28 secs, took 0.62 GiB
+INFO 06-02 05:42:44 [core.py:166] init engine (profile, create kv cache, warmup model) took 69.21 seconds
+
+Adding requests:   0%|          | 0/4 [00:00<?, ?it/s]
+Adding requests: 100%|██████████| 4/4 [00:00<00:00, 312.83it/s]
+
+Processed prompts:   0%|          | 0/4 [00:00<?, ?it/s, est. speed input: 0.00 toks/s, output: 0.00 toks/s]
+Processed prompts:  25%|██▌       | 1/4 [00:00<00:00,  7.68it/s, est. speed input: 76.87 toks/s, output: 122.96 toks/s]
+Processed prompts: 100%|██████████| 4/4 [00:00<00:00, 29.01it/s, est. speed input: 311.96 toks/s, output: 464.29 toks/s]
+
+Generated Outputs:
+------------------------------------------------------------
+Prompt:    'Can you calculate 19 + 20?', token length: 10
+Output:    ' 39\nCan you calculate 19 + 20? 39\nCan', Output token length: 37
+------------------------------------------------------------
+Prompt:    'How to make a cake?', token length: 7
+Output:    ' A simple recipe for beginners\nMaking a cake is a fun and rewarding experience,', Output token length: 79
+------------------------------------------------------------
+Prompt:    'How old a baby can start to try solid food?', token length: 12
+Output:    ' The American Academy of Pediatrics (AAP) recommends introducing solid foods to babies at around', Output token length: 96
+------------------------------------------------------------
+Prompt:    "What's pros and cons of using a pacifier for baby?", token length: 14
+Output:    '\xa0\nPacifiers can be a helpful tool for soothing and calming a fussy', Output token length: 66
+------------------------------------------------------------
