@@ -97,12 +97,13 @@ class AllGatherGEMMPattern(BasePattern):
         pm.register_replacement(pattern, replacement, self.get_inputs(),
                                 pm.fwd_only, pm_pass)
 
-
+from vllm.platforms import current_platform
+FP8_DTYPE = current_platform.fp8_dtype()
 class ScaledMMReduceScatterPattern(BasePattern):
 
     def get_inputs(self):
-        input = torch.empty([16, 16], device=self.device, dtype=self.dtype)
-        mm_weight = torch.empty([16, 16], device=self.device, dtype=self.dtype)
+        input = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
+        mm_weight = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
         scaled_a = torch.empty([16, 1],
                                device=self.device,
                                dtype=torch.float32)
@@ -115,6 +116,7 @@ class ScaledMMReduceScatterPattern(BasePattern):
 
         def pattern(input: torch.Tensor, mat2: torch.Tensor,
                     scaled_a: torch.Tensor, scaled_b: torch.Tensor):
+            print(f"Pattern matched: {input.dtype}, {mat2.dtype}, {scaled_a.shape}, {scaled_b.shape}")
             scaled_mm = torch.ops.aten._scaled_mm.default(input,
                                                           mat2=mat2,
                                                           scale_a=scaled_a,
@@ -164,8 +166,8 @@ class ScaledMMReduceScatterPattern(BasePattern):
 class AllGatherScaledMMPattern(BasePattern):
 
     def get_inputs(self):
-        x = torch.empty([16, 16], device=self.device, dtype=self.dtype)
-        weight = torch.empty([16, 16], device=self.device, dtype=self.dtype)
+        x = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
+        weight = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
         scaled_a = torch.empty([16, 1],
                                device=self.device,
                                dtype=torch.float32)
@@ -241,6 +243,8 @@ class AsyncTPPass(VllmInductorPass):
         enable_symm_mem_for_group(get_tp_group().device_group.group_name)
         self.patterns: PatternMatcherPass = PatternMatcherPass(
             pass_name="async_tp_pass")
+        print(f"AsyncTPPass: {self.model_dtype=}, {self.device=}")
+
         GEMMReduceScatterPattern(self.model_dtype,
                                  self.device).register(self.patterns)
 
