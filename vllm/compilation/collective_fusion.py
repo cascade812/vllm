@@ -103,24 +103,24 @@ class ScaledMMReduceScatterPattern(BasePattern):
 
     def get_inputs(self):
         input = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
-        mm_weight = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
-        scaled_a = torch.empty([16, 1],
+        mm_weight = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE).contiguous().transpose(0, 1)
+        scale_a = torch.empty([16, 1],
                                device=self.device,
                                dtype=torch.float32)
-        scaled_b = torch.empty([1, 16],
+        scale_b = torch.empty([1, 16],
                                device=self.device,
                                dtype=torch.float32)
-        return [input, mm_weight, scaled_a, scaled_b]
+        return [input, mm_weight, scale_a, scale_b]
 
     def register(self, pm_pass: PatternMatcherPass):
 
         def pattern(input: torch.Tensor, mat2: torch.Tensor,
-                    scaled_a: torch.Tensor, scaled_b: torch.Tensor):
-            print(f"Pattern matched: {input.dtype}, {mat2.dtype}, {scaled_a.shape}, {scaled_b.shape}")
+                    scale_a: torch.Tensor, scale_b: torch.Tensor):
+            print(f"Pattern matched: {input.dtype}, {mat2.dtype}, {scale_a.shape}, {scale_b.shape}")
             scaled_mm = torch.ops.aten._scaled_mm.default(input,
                                                           mat2=mat2,
-                                                          scale_a=scaled_a,
-                                                          scale_b=scaled_b,
+                                                          scale_a=scale_a,
+                                                          scale_b=scale_b,
                                                           bias=None,
                                                           scale_result=None,
                                                           out_dtype=self.dtype)
@@ -132,12 +132,12 @@ class ScaledMMReduceScatterPattern(BasePattern):
             return reduce_scatter
 
         def replacement(input: torch.Tensor, mat2: torch.Tensor,
-                        scaled_a: torch.Tensor, scaled_b: torch.Tensor):
+                        scale_a: torch.Tensor, scale_b: torch.Tensor):
             gemm_rs = torch.ops.symm_mem.fused_scaled_matmul_reduce_scatter(
                 input,
                 mat2,
-                scaled_a,
-                scaled_b,
+                scale_a,
+                scale_b,
                 "avg",
                 scatter_dim=0,
                 group_name=self.tp.device_group.group_name,
@@ -166,24 +166,24 @@ class ScaledMMReduceScatterPattern(BasePattern):
 class AllGatherScaledMMPattern(BasePattern):
 
     def get_inputs(self):
-        x = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
-        weight = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE)
-        scaled_a = torch.empty([16, 1],
+        x = torch.empty([8, 16], device=self.device, dtype=FP8_DTYPE)
+        weight = torch.empty([16, 16], device=self.device, dtype=FP8_DTYPE).contiguous().transpose(0, 1)
+        scale_a = torch.empty([16, 1],
                                device=self.device,
                                dtype=torch.float32)
-        scaled_b = torch.empty([1, 16],
+        scale_b = torch.empty([1, 16],
                                device=self.device,
                                dtype=torch.float32)
 
-        return [x, weight, scaled_a, scaled_b]
+        return [x, weight, scale_a, scale_b]
 
     def register(self, pm_pass: PatternMatcherPass):
 
         def pattern(
             x: torch.Tensor,
             weight: torch.Tensor,
-            scaled_a: torch.Tensor,
-            scaled_b: torch.Tensor,
+            scale_a: torch.Tensor,
+            scale_b: torch.Tensor,
         ) -> tuple[torch.Tensor, torch.Tensor]:
             all_gather = torch.ops.vllm.all_gather.default(
                 x,
@@ -191,25 +191,25 @@ class AllGatherScaledMMPattern(BasePattern):
                 world_size=self.tp_size,
                 group_name=self.tp.unique_name)
 
-            return torch.ops.aten._scaled_mm.default(input=all_gather,
+            return torch.ops.aten._scaled_mm.default(all_gather,
                                                      mat2=weight,
-                                                     scale_a=scaled_a,
-                                                     scale_b=scaled_b,
+                                                     scale_a=scale_a,
+                                                     scale_b=scale_b,
                                                      bias=None,
                                                      scale_result=None,
                                                      out_dtype=self.dtype)
 
         def replacement(
-                x: torch.Tensor, weight: torch.Tensor, scaled_a: torch.Tensor,
-                scaled_b: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+                x: torch.Tensor, weight: torch.Tensor, scale_a: torch.Tensor,
+                scale_b: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
             ag_output, mm_outputs = torch.ops.symm_mem.fused_all_gather_scaled_matmul(
                 x,
                 [weight],
-                scaled_a,
-                [scaled_b],
+                scale_a,
+                [scale_b],
                 gather_dim=0,
-                biases=None,
-                result_scales=None,
+                biases=[None],
+                result_scales=[None],
                 out_dtypes=[self.dtype],
                 use_fast_accum=[False],
                 group_name=self.tp.device_group.group_name,
