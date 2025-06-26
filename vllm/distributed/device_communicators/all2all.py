@@ -30,44 +30,116 @@ class NaiveAll2AllManager(All2AllManagerBase):
     def __init__(self, cpu_group):
         super().__init__(cpu_group)
 
+    from vllm.distributed.parallel_state import GroupCoordinator
     def naive_multicast(self, x: torch.Tensor,
-                        cu_tokens_across_dp_cpu: torch.Tensor):
+                        cu_tokens_across_cpu: torch.Tensor, all_tokens: int,
+                        rank_in_group: int, group_world_size: int,
+                        group: GroupCoordinator):
         assert (len(x.shape) == 2)
-        buffer = torch.empty((cu_tokens_across_dp_cpu[-1], x.size(1)),
+        buffer = torch.empty((all_tokens, x.size(1)),
                              device=x.device,
                              dtype=x.dtype)
 
-        start = 0 if self.dp_rank == 0 else cu_tokens_across_dp_cpu[
-            self.dp_rank - 1]
-        end = cu_tokens_across_dp_cpu[self.dp_rank]
+        start = 0 if rank_in_group == 0 else cu_tokens_across_cpu[
+            rank_in_group - 1]
+        end = cu_tokens_across_cpu[rank_in_group]
         buffer[start:end, :].copy_(x)
-        for idx in range(self.dp_world_size):
-            start = 0 if idx == 0 else cu_tokens_across_dp_cpu[idx - 1]
-            end = cu_tokens_across_dp_cpu[idx]
-            self.dp_group.broadcast(buffer[start:end, :], idx)
+        for idx in range(group_world_size):
+            start = 0 if idx == 0 else cu_tokens_across_cpu[idx - 1]
+            end = cu_tokens_across_cpu[idx]
+            group.broadcast(buffer[start:end, :], idx)
 
         return buffer
+    
+    def naive_multicast2(self, x: torch.Tensor,
+                        cu_tokens_across_cpu: list[int], all_tokens: int,
+                        rank_in_group: int, group_world_size: int,
+                        group: GroupCoordinator):
+        assert (len(x.shape) == 2)
+        buffer = torch.empty((all_tokens, x.size(1)),
+                             device=x.device,
+                             dtype=x.dtype)
+
+        start = 0 if rank_in_group == 0 else cu_tokens_across_cpu[
+            rank_in_group - 1]
+        end = cu_tokens_across_cpu[rank_in_group]
+        buffer[start:end, :].copy_(x)
+        for idx in range(group_world_size):
+            start = 0 if idx == 0 else cu_tokens_across_cpu[idx - 1]
+            end = cu_tokens_across_cpu[idx]
+            group.broadcast(buffer[start:end, :], idx)
+
+        return buffer
+    
+
+
 
     def dispatch(self, hidden_states: torch.Tensor,
                  router_logits: torch.Tensor):
-        cu_tokens_across_dp_cpu = get_forward_context(
-        ).dp_metadata.cu_tokens_across_dp_cpu
+        if get_forward_context().dp_metadata is not None:
+            cu_tokens_across_cpu = get_forward_context(
+            ).dp_metadata.cu_tokens_across_dp_cpu
 
-        hidden_states = self.naive_multicast(hidden_states,
-                                             cu_tokens_across_dp_cpu)
-        router_logits = self.naive_multicast(router_logits,
-                                             cu_tokens_across_dp_cpu)
+            hidden_states = self.naive_multicast(hidden_states,
+                                             cu_tokens_across_cpu,
+                                             cu_tokens_across_cpu[-1],
+                                             self.dp_rank,
+                                             self.dp_world_size,
+                                             self.dp_group)
+            router_logits = self.naive_multicast(router_logits,
+                                             cu_tokens_across_cpu,
+                                             cu_tokens_across_cpu[-1],
+                                             self.dp_rank,
+                                             self.dp_world_size,
+                                             self.dp_group)
+        elif get_forward_context().num_tokens is not None:
+            # If dp_metadata is not set, we assume it it's SP
+            tokens_per_sp = get_forward_context().num_tokens
+        
+            # print("Using naive multicast for SP with tokens_per_sp:", tokens_per_sp)
+            # For SP, we use the number of tokens per SP as the size of each
+            # chunk. This is a workaround for the case where we don't have
+            from vllm.distributed.parallel_state import (get_tensor_model_parallel_world_size)
+            sequence = list(range(1, get_tensor_model_parallel_world_size() + 1))
+            cu_tokens_across_cpu = sequence * tokens_per_sp
+
+            hidden_states = self.naive_multicast2(hidden_states,
+                                             cu_tokens_across_cpu,
+                                             tokens_per_sp * self.tp_world_size,
+                                             self.tp_rank,
+                                             self.tp_world_size,
+                                             self.tp_group)
+            router_logits = self.naive_multicast2(router_logits,
+                                             cu_tokens_across_cpu,
+                                             tokens_per_sp * self.tp_world_size,
+                                             self.tp_rank,
+                                             self.tp_world_size,
+                                             self.tp_group)
+
+        
         return hidden_states, router_logits
 
     def combine(self, hidden_states: torch.Tensor) -> torch.Tensor:
-        cu_tokens_across_dp_cpu = get_forward_context(
-        ).dp_metadata.cu_tokens_across_dp_cpu
-        start = 0 if self.dp_rank == 0 else cu_tokens_across_dp_cpu[
-            self.dp_rank - 1]
-        end = cu_tokens_across_dp_cpu[self.dp_rank]
+        if get_forward_context().dp_metadata is not None:
+            cu_tokens_across_dp_cpu = get_forward_context(
+            ).dp_metadata.cu_tokens_across_dp_cpu
+            start = 0 if self.dp_rank == 0 else cu_tokens_across_dp_cpu[
+                self.dp_rank - 1]
+            end = cu_tokens_across_dp_cpu[self.dp_rank]
 
-        all_hidden_states = self.dp_group.all_reduce(hidden_states)
-        hidden_states = all_hidden_states[start:end, :]
+            all_hidden_states = self.dp_group.all_reduce(hidden_states)
+            hidden_states = all_hidden_states[start:end, :]
+        else:
+            # If dp_metadata is not set, we assume it it's SP
+            tokens_per_sp = hidden_states.size(0)
+            from vllm.distributed.parallel_state import (get_tensor_model_parallel_world_size)
+            sequence = torch.arange(1, get_tensor_model_parallel_world_size() + 1, dtype=torch.int32)
+            cu_tokens_across_cpu = sequence * tokens_per_sp
+            
+            start = 0 if self.tp_rank == 0 else cu_tokens_across_cpu[self.tp_rank - 1]
+            end = cu_tokens_across_cpu[self.tp_rank]
+            all_hidden_states = self.tp_group.all_reduce(hidden_states)
+            hidden_states = all_hidden_states[start:end, :]
         return hidden_states
 
     def destroy(self):

@@ -44,6 +44,8 @@ class All2AllManagerBase:
         # when we create this object
         self.dp_rank = self.dp_group.rank_in_group
         self.dp_world_size = self.dp_group.world_size
+        self.tp_rank = self.tp_group.rank_in_group
+        self.tp_world_size = self.tp_group.world_size
         self.rank = dist.get_rank(cpu_group)
         self.world_size = dist.get_world_size(cpu_group)
 
@@ -103,9 +105,11 @@ class DeviceCommunicatorBase:
             # as long as we use data parallel (coupled data parallel
             # where all data parallel ranks execute forward together),
             # we initialize the all2all manager used in expert parallel.
-            use_ep = config.parallel_config.data_parallel_size > 1
+            use_ep = config.parallel_config.data_parallel_size > 1 or \
+                config.compilation_config.pass_config.enable_sequence_parallelism
 
         self.use_all2all = "ep" in unique_name and use_ep
+        # print(f"Using all2all: {self.use_all2all} for {unique_name}, use_ep: {use_ep}")
         self.all2all_manager: Optional[All2AllManagerBase] = None
 
     def all_reduce(self, input_: torch.Tensor) -> torch.Tensor:

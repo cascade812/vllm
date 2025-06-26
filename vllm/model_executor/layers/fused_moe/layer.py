@@ -16,7 +16,7 @@ from torch.nn.parameter import UninitializedParameter
 
 import vllm.envs as envs
 from vllm.config import ParallelConfig, get_current_vllm_config
-from vllm.distributed import (get_dp_group, get_ep_group,
+from vllm.distributed import (get_dp_group, get_ep_group, get_tp_group,
                               get_tensor_model_parallel_rank,
                               get_tensor_model_parallel_world_size,
                               tensor_model_parallel_all_reduce)
@@ -170,6 +170,10 @@ class FusedMoEParallelConfig:
 
         use_ep = (dp_size_ * tp_size_ > 1
                   and vllm_parallel_config.enable_expert_parallel)
+        
+        print(f"FusedMoEParallelConfig.make: tp_size_={tp_size_}, "
+              f"dp_size_={dp_size_}, use_ep={use_ep}, "
+              f"vllm_parallel_config={vllm_parallel_config}")
 
         dp_size = dp_size_
         dp_rank = get_dp_group().rank_in_group if dp_size > 1 else 0
@@ -625,6 +629,7 @@ class UnquantizedFusedMoEMethod(FusedMoEMethodBase, CustomOp):
                 activation=activation,
                 apply_router_weight_on_input=apply_router_weight_on_input)
         else:
+            # print(f"cascade812 FusedMoEMethod.forward_cuda: ")
             return self.fused_experts(
                 hidden_states=x,
                 w1=layer.w13_weight,
@@ -841,24 +846,25 @@ class FusedMoE(torch.nn.Module):
             params_dtype = torch.get_default_dtype()
         self.params_dtype = params_dtype
 
-        vllm_config = get_current_vllm_config()
+        self.vllm_config = get_current_vllm_config()
         self.moe_parallel_config: FusedMoEParallelConfig = (
             FusedMoEParallelConfig.make(
                 tp_size_=(tp_size if tp_size is not None else
                           get_tensor_model_parallel_world_size()),
                 dp_size_=(dp_size if dp_size is not None else
                           get_dp_group().world_size),
-                vllm_parallel_config=vllm_config.parallel_config))
+                vllm_parallel_config=self.vllm_config.parallel_config))
 
         self.global_num_experts = num_experts
 
         # For smuggling this layer into the fused moe custom op
         self.use_direct_call = self.dp_size == 1
         if not self.use_direct_call:
-            compilation_config = vllm_config.compilation_config
+            compilation_config = self.vllm_config.compilation_config
             if prefix in compilation_config.static_forward_context:
                 raise ValueError("Duplicate layer name: {}".format(prefix))
             compilation_config.static_forward_context[prefix] = self
+            print(f"cascade812 set layer_name={prefix} ")
             self.layer_name = prefix
 
         # Determine expert maps
@@ -1438,9 +1444,12 @@ class FusedMoE(torch.nn.Module):
                 or self.moe_parallel_config.use_deepep_ll_kernels):
             return self.forward_impl_chunked(hidden_states, router_logits)
 
+
+        enable_sp = self.vllm_config.compilation_config.pass_config.enable_sequence_parallelism
         do_naive_dispatch_combine: bool = (
-            self.dp_size > 1
-            and not self.moe_parallel_config.use_deepep_ht_kernels)
+            (self.dp_size > 1
+            and not self.moe_parallel_config.use_deepep_ht_kernels) or enable_sp)
+        
         if do_naive_dispatch_combine:
             hidden_states, router_logits = get_ep_group().dispatch(
                 hidden_states, router_logits)
@@ -1516,6 +1525,7 @@ class FusedMoE(torch.nn.Module):
 def moe_forward(hidden_states: torch.Tensor, router_logits: torch.Tensor,
                 layer_name: str) -> torch.Tensor:
     forward_context: ForwardContext = get_forward_context()
+    assert layer_name in forward_context.no_compile_layers
     self = forward_context.no_compile_layers[layer_name]
     assert self.quant_method is not None
 

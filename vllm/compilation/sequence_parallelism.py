@@ -18,6 +18,31 @@ from .vllm_inductor_pass import VllmInductorPass
 logger = init_logger(__name__)
 
 
+
+
+# %all_reduce_95 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%mm_142, tp:0), kwargs = {})
+# %auto_functionalized_239 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_95, residual: %getitem_1364, weight: %arg339_1, epsilon: 1e-06})
+# %getitem_1389 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_239, 1), kwargs = {})
+# %getitem_1390 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_239, 2), kwargs = {})
+# %view_1628 : [num_users=2] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_1389, [-1, 2048]), kwargs = {})
+# %permute_240 : [num_users=1] = call_function[target=torch.ops.aten.permute.default](args = (%arg340_1, [1, 0]), kwargs = {})
+# %mm_143 : [num_users=1] = call_function[target=torch.ops.aten.mm.default](args = (%view_1628, %permute_240), kwargs = {})
+# %moe_forward_47 : [num_users=1] = call_function[target=torch.ops.vllm.moe_forward.default](args = (%view_1628, %mm_143, model.layers.47.mlp.experts), kwargs = {})
+# %all_reduce_96 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%moe_forward_47, tp:0), kwargs = {})
+
+#  TO
+
+# %reduce_scatter : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%mm_142, tp:0), kwargs = {})
+# %auto_functionalized_239 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_95, residual: %getitem_1364, weight: %arg339_1, epsilon: 1e-06})
+# %getitem_1389 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_239, 1), kwargs = {})
+# %getitem_1390 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_239, 2), kwargs = {})
+# %view_1628 : [num_users=2] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_1389, [-1, 2048]), kwargs = {})
+# %permute_240 : [num_users=1] = call_function[target=torch.ops.aten.permute.default](args = (%arg340_1, [1, 0]), kwargs = {})
+# %mm_143 : [num_users=1] = call_function[target=torch.ops.aten.mm.default](args = (%view_1628, %permute_240), kwargs = {})
+# %moe_forward_47 : [num_users=1] = call_function[target=torch.ops.vllm.moe_forward.default](args = (%view_1628, %mm_143, model.layers.47.mlp.experts), kwargs = {})
+# %all_gather : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%moe_forward_47, tp:0), kwargs = {})
+
+
 class AllReduceRMSNormPattern:
 
     def __init__(self, epsilon: float, dtype: torch.dtype, device: str):
@@ -25,6 +50,110 @@ class AllReduceRMSNormPattern:
         self.dtype = dtype
         self.device = device
 
+
+
+class SPMOEPattern(AllReduceRMSNormPattern):
+    def get_inputs(self):
+        mm_1 = torch.empty([4, 4], device=self.device, dtype=self.dtype)
+        residual = torch.empty([4, 4], device=self.device, dtype=self.dtype)
+        rms_norm_weights = torch.empty([4, 4],
+                                       device=self.device,
+                                       dtype=self.dtype)
+        mm_weights = torch.empty([4, 4], device=self.device, dtype=self.dtype)
+        layer_name = "model.layers.47.mlp.experts"
+
+        return [
+            mm_1,
+            residual,
+            rms_norm_weights,
+            mm_weights,
+            layer_name,
+        ]
+    
+    def register(self, pm_pass: PatternMatcherPass):
+
+        
+# %all_reduce_95 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%mm_142, tp:0), kwargs = {})
+# %auto_functionalized_239 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_95, residual: %getitem_1364, weight: %arg339_1, epsilon: 1e-06})
+# %getitem_1389 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_239, 1), kwargs = {})
+# %getitem_1390 : [num_users=1] = call_function[target=operator.getitem](args = (%auto_functionalized_239, 2), kwargs = {})
+# %view_1628 : [num_users=2] = call_function[target=torch.ops.aten.reshape.default](args = (%getitem_1389, [-1, 2048]), kwargs = {})
+# %permute_240 : [num_users=1] = call_function[target=torch.ops.aten.permute.default](args = (%arg340_1, [1, 0]), kwargs = {})
+# %mm_143 : [num_users=1] = call_function[target=torch.ops.aten.mm.default](args = (%view_1628, %permute_240), kwargs = {})
+# %moe_forward_47 : [num_users=1] = call_function[target=torch.ops.vllm.moe_forward.default](args = (%view_1628, %mm_143, model.layers.47.mlp.experts), kwargs = {})
+# %all_reduce_96 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%moe_forward_47, tp:0), kwargs = {})
+
+        def pattern(mm_1: torch.Tensor,
+                    residual: torch.Tensor,
+                    rms_norm_weights: torch.Tensor,
+                    mm_weights: torch.Tensor,
+                    layer_name: str) -> tuple[torch.Tensor, torch.Tensor]:
+            
+            # %all_reduce_95 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%mm_142, tp:0), kwargs = {})
+            all_reduce = tensor_model_parallel_all_reduce(mm_1)
+
+            # %auto_functionalized_239 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_95, residual: %getitem_1364, weight: %arg339_1, epsilon: 1e-06})
+            rmsnorm = torch.ops.higher_order.auto_functionalized(
+                torch.ops._C.fused_add_rms_norm.default,
+                input=all_reduce,
+                residual=residual,
+                weight=rms_norm_weights,
+                epsilon=self.epsilon,
+            )
+
+            # %mm_143 : [num_users=1] = call_function[target=torch.ops.aten.mm.default](args = (%view_1628, %permute_240), kwargs = {})
+            mm_result = torch.ops.aten.mm.default(rmsnorm[1], mm_weights)
+
+            # %moe_forward_47 : [num_users=1] = call_function[target=torch.ops.vllm.moe_forward.default](args = (%view_1628, %mm_143, model.layers.47.mlp.experts), kwargs = {})
+            moe_forward = torch.ops.vllm.moe_forward.default(
+                rmsnorm[1], mm_result, layer_name)
+            
+            # %all_reduce_96 : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%moe_forward_47, tp:0), kwargs = {})
+            all_reduce_moe = tensor_model_parallel_all_reduce(moe_forward)
+
+            return all_reduce_moe, rmsnorm[2]
+        def replacement(mm_1: torch.Tensor,
+                        residual: torch.Tensor,
+                        rms_norm_weights: torch.Tensor,
+                        mm_weights: torch.Tensor,
+                        layer_name: str) -> tuple[torch.Tensor, torch.Tensor]:
+            tp = get_tp_group()
+            tp_size = get_tensor_model_parallel_world_size()
+
+            # %reduce_scatter : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%mm_142, tp:0), kwargs = {})
+            reduce_scatter = torch.ops.vllm.reduce_scatter.default(
+                mm_1, dim=0, world_size=tp_size, group_name=tp.unique_name)
+
+            # %auto_functionalized_239 : [num_users=2] = call_function[target=torch.ops.higher_order.auto_functionalized](args = (_C.fused_add_rms_norm.default,), kwargs = {input: %all_reduce_95, residual: %getitem_1364, weight: %arg339_1, epsilon: 1e-06})
+            rmsnorm = torch.ops.higher_order.auto_functionalized(
+                torch.ops._C.fused_add_rms_norm.default,
+                input=reduce_scatter,
+                residual=residual,
+                weight=rms_norm_weights,
+                epsilon=self.epsilon,
+            )
+
+            # %mm_143 : [num_users=1] = call_function[target=torch.ops.aten.mm.default](args = (%view_1628, %permute_240), kwargs = {})
+            mm_result = torch.ops.aten.mm.default(rmsnorm[1], mm_weights)
+
+            # %moe_forward_47 : [num_users=1] = call_function[target=torch.ops.vllm.moe_forward.default](args = (%view_1628, %mm_143, model.layers.47.mlp.experts), kwargs = {})
+            moe_forward = torch.ops.vllm.moe_forward.default(
+                rmsnorm[1], mm_result, layer_name)
+
+            # %all_gather : [num_users=1] = call_function[target=torch.ops.vllm.all_reduce.default](args = (%moe_forward_47, tp:0), kwargs = {})
+            all_gather = torch.ops.vllm.all_gather.default(
+                moe_forward,
+                dim=0,
+                world_size=tp_size,
+                group_name=tp.unique_name)
+
+            return all_gather, rmsnorm[2]
+
+        pm.register_replacement(pattern, replacement, self.get_inputs(),
+                                pm.fwd_only, pm_pass)
+        
+
+    
 
 class EmbeddingAllReduceRMSNormPattern(AllReduceRMSNormPattern):
 
@@ -251,6 +380,9 @@ class SequenceParallelismPass(VllmInductorPass):
 
             LastAllReduceRMSNormPattern(epsilon, self.model_dtype,
                                         self.device).register(self.patterns)
+            
+            
+            SPMOEPattern(epsilon, self.model_dtype, self.device).register(self.patterns)
             # WARNING: This is a hack to clear the pattern matcher cache
             # and allow multiple values of epsilon.
             torch._inductor.pattern_matcher._seen_patterns.clear()
@@ -261,8 +393,16 @@ class SequenceParallelismPass(VllmInductorPass):
 
     def __call__(self, graph: fx.Graph):
         self.begin()
+        import torch.distributed as dist
+        if dist.get_rank() == 0:
+            print(f"before graph {graph}")
+    
         self.dump_graph(graph, "before_sequence_parallelism_pass")
         count = self.patterns.apply(graph)
         logger.debug("Replaced %s patterns", count)
         self.dump_graph(graph, "after_sequence_parallelism_pass")
+        import torch.distributed as dist
+        if dist.get_rank() == 0:
+            print(f"after graph {graph}")
+    
         self.end_and_log()
